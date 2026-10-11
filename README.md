@@ -11,7 +11,7 @@ First milestone: a working multi-workspace CRM foundation. **Not production-read
 - Tenant-scoped leads: create, paginate, search, filter, update status.
 - Business terminology: owner publishes immutable versions with stale-write protection.
 - Audit records for lead changes and configuration publishing, excluding lead contact values.
-- Bengali/English labels in key screens. Locale is saved; full locale switching is not implemented.
+- Bengali/English workspace navigation, overview and lead-screen labels based on workspace locale. Full app localization and locale editing are not implemented.
 
 ## Local setup
 
@@ -42,6 +42,7 @@ vendor/bin/pint --test
 vendor/bin/phpstan analyse --memory-limit=1G
 php artisan test
 npm run types:check
+npm run test:ui
 npm run check
 npm run build
 ```
@@ -50,6 +51,7 @@ npm run build
 
 - [Product blueprint in Bengali](docs/PRODUCT_BLUEPRINT_BN.md): complete vision, customization model and GPT implementation guide.
 - [Architecture and safety rules](docs/ARCHITECTURE.md)
+- [Security checklist](docs/SECURITY.md)
 - [Milestones and current status](docs/ROADMAP.md)
 - [GPT continuation instructions](AGENTS.md)
 

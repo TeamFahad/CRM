@@ -8,6 +8,9 @@ Lead IDs from another workspace also return 404.
 TenantContext is request-scoped and cleared in finally.
 Model global scopes are a defense layer, not database RLS; raw queries need explicit tenant predicates.
 No database-level tenant RLS is implemented yet.
+Indexes cover membership-by-user, tenant/status/time, tenant/time, contact lookup and actor foreign keys.
+Wildcard name/email/phone search needs measured PostgreSQL query plans and possibly trigram indexing at scale.
+Database best-practices review influenced these indexes and the short transaction boundaries.
 
 ## Modules
 
@@ -27,6 +30,8 @@ shared core -> industry package -> tenant overrides. Industry selection currentl
 User is global; tenant membership grants role per workspace.
 Tenant-owned lead/configuration/audit rows reference a tenant.
 Foreign keys prevent orphaning audited tenants. Hard-delete UI is intentionally absent.
+Self-service account deletion is blocked while memberships or historical business records exist.
+This is a retention safeguard, not a complete account-closure/privacy workflow.
 Leads do not deduplicate yet. Source labels such as WhatsApp do not imply a live integration.
 Member provisioning lacks invitation UI; never add an unauthenticated membership-write endpoint.
 
@@ -47,4 +52,6 @@ TLS load balancer, separate staging, CI migrations and tested backup restoration
 Use managed services initially when their support and operational cost suit the budget.
 No live deployment is configured by this milestone.
 Production must disable APP_DEBUG and use distinct rotated secrets.
+Use `composer install --no-dev --optimize-autoloader` for production artifacts.
+Local setup uses the normal PSR autoloader to avoid an expensive Windows classmap scan.
 Never run composer dev or the Vite development server as production hosting.

@@ -1,11 +1,12 @@
 # Delivery status
 
-## M0 + first M1 slice — implemented, verification in progress
+## M0 + first M1 slice — implemented, local verification passed
 
 Official Laravel/React foundation; authentication; workspace creation; tenant isolation;
 permission registry; leads create/search/filter/pagination/status; versioned terminology;
 transactional audit writes; security-focused feature tests; Bengali product blueprint in repository.
 The blueprint's full M0/M1 acceptance criteria are not all complete.
+See [verification report](VERIFICATION.md). PostgreSQL CI is configured, not locally executed.
 
 ## Next increments
 
