@@ -14,7 +14,7 @@ See [verification report](VERIFICATION.md). Foundation PostgreSQL/SQLite CI pass
 - Revoke/reissue, member pagination, invitation history, non-owner role assignment and removal.
 - Backend owner checks, cross-tenant isolation, stale-role rejection and immutable owner safeguards.
 - Team mutations and redacted audit events commit or roll back together.
-- PostgreSQL-only tests exercise independent competing connections against real service row locks; locally skipped because no PostgreSQL server is available. See CI verification status.
+- PostgreSQL-only tests exercise independent competing connections against real service row locks; locally skipped because no PostgreSQL server is available. Both PostgreSQL and SQLite CI jobs passed for the implementation commit; see the verification report.
 
 This is a scoped team-management increment, **not all of M1**. Ownership transfer and automatic
 invitation email delivery are deferred. See [Bengali phase report](PHASE_1_TEAM_BN.md).

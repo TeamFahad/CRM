@@ -101,7 +101,10 @@ role conflict এবং audit ব্যর্থতায় rollback পরীক�
 
 দুটি PostgreSQL integration test আলাদা database connection দিয়ে invitation acceptance এবং
 role-change/removal-এর lock পরীক্ষা করে। স্থানীয় SQLite-এ এগুলো skipped; PostgreSQL CI-তে
-চালানোর ব্যবস্থা আছে। সর্বশেষ প্রকৃত ফল [VERIFICATION.md](VERIFICATION.md)-এ রাখা হবে।
+চালিয়ে সফল ফল পাওয়া গেছে। SQLite ও PostgreSQL—দুই CI job-ই পাস। স্থানীয় পূর্ণ suite-এ
+৭৭টি PHP test ও ৩টি frontend unit test পাস করেছে; PostgreSQL-এর দুটি test স্থানীয়ভাবে
+skipped। TypeScript, PHP static analysis, formatting/lint ও frontend build-ও পাস।
+সর্বশেষ প্রকৃত ফল [VERIFICATION.md](VERIFICATION.md)-এ রাখা আছে।
 
 Browser end-to-end, mobile/accessibility review, বড় traffic-এর পরীক্ষা, backup restore,
 real mail delivery ও production deployment এখনো যাচাই হয়নি।

@@ -72,10 +72,13 @@ class TeamTest extends TestCase
 
     public function test_link_is_one_time_flash_and_not_a_team_page_prop(): void
     {
-        $this->invite();
-        $this->get($this->base())->assertHeader('Referrer-Policy', 'no-referrer')->assertInertia(fn (Assert $page) => $page->component('team/index')->missing('invitationLink')->missing('invitations.data.0.token_hash'));
+        $invitation = $this->invite();
+        $this->assertStringNotContainsString($invitation['token'], session('team_invitation_link'));
+        $response = $this->get($this->base())->assertHeader('Referrer-Policy', 'no-referrer');
+        $this->assertStringContainsString('no-store', $response->headers->get('Cache-Control'));
+        $response->assertInertia(fn (Assert $page) => $page->component('team/index')->hasFlash('invitationLink', $invitation['link'])->missing('invitationLink')->missing('invitations.data.0.token_hash'));
         $this->assertNull(session('team_invitation_link'));
-        $this->get($this->base())->assertInertia(fn (Assert $page) => $page->missing('invitationLink'));
+        $this->get($this->base())->assertInertia(fn (Assert $page) => $page->missing('invitationLink')->missingFlash('invitationLink'));
     }
 
     public function test_non_owners_cannot_manage_the_team_or_escalate_roles(): void

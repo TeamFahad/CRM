@@ -7,7 +7,7 @@ Passed locally on Windows (PHP 8.4, Node 26):
 - Invitation migration applied to the local development database.
 - Complete `composer ci:check`: PHP formatting, PHPStan level 7 (zero errors), PHP tests,
   TypeScript, frontend formatting/lint and frontend unit tests.
-- PHPUnit: **77 passed, 371 assertions; 2 PostgreSQL-only tests explicitly skipped** (79 total).
+- PHPUnit: **77 passed, 376 assertions; 2 PostgreSQL-only tests explicitly skipped** (79 total).
   This adds 23 team feature tests to the 54-test foundation.
 - Three existing frontend translation/safety unit tests passed. These do not exercise the new React invitation UI.
 - Production frontend build, including Team and Accept pages and generated Wayfinder routes/actions.
@@ -21,7 +21,11 @@ PostgreSQL-specific integration coverage added:
 - Uncommitted real role change blocks competing removal; stale removal after commit is rejected.
 
 Local PostgreSQL is unavailable; these cases are not claimed as locally passing. The GitHub Actions
-PostgreSQL/SQLite matrix runs on push. This increment's CI result is pending at this report's initial commit.
+PostgreSQL/SQLite matrix runs on push. **Both database jobs completed successfully** for implementation
+commit `2b7dae5`: [team-management CI run](https://github.com/umar-vai/CRM/actions/runs/38159158387).
+The PostgreSQL job exercises the two connection/locking tests; SQLite explicitly skips them.
+The latest local count includes five additional assertions for encrypted-session delivery, response
+flash and no-store behavior added after that implementation commit; the full local CI suite was rerun.
 The earlier foundation CI completed successfully: [foundation run](https://github.com/umar-vai/CRM/actions/runs/38151523906).
 
 Not verified: browser E2E (including auth/verification fragment redirects, clipboard behavior and
