@@ -1,4 +1,4 @@
-import { Link } from '@inertiajs/react';
+import { Link, usePage } from '@inertiajs/react';
 import { translator } from '@/lib/platform-i18n';
 import type { Workspace } from '@/types/platform';
 
@@ -11,6 +11,7 @@ export function WorkspaceNav({
 }) {
     const base = '/workspaces/' + workspace.id;
     const t = translator(workspace.locale);
+    const canManageTeam = usePage().props.canManageTeam === true;
     return (
         <nav
             aria-label="Workspace navigation"
@@ -18,6 +19,7 @@ export function WorkspaceNav({
         >
             <Link href={base}>{t('overview')}</Link>
             <Link href={base + '/leads'}>{t('leads')}</Link>
+            {canManageTeam && <Link href={base + '/team'}>{t('team')}</Link>}
             {canConfigure && (
                 <Link href={base + '/configuration'}>{t('configuration')}</Link>
             )}

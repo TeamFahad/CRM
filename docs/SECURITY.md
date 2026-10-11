@@ -9,21 +9,32 @@ Non-member workspace access, cross-workspace lead identifiers, filtered search i
 read-only role writes, forged tenant_id, status audit, configuration ownership/version conflict,
 and missing tenant context after a request.
 
+Team tests additionally cover hashed tokens, one-use acceptance, email verification/binding,
+expiry/revoke/reissue, cross-business identifiers, non-owner escalation, protected owners,
+fresh permission checks, stale role changes and audit-failure rollback. Raw tokens are not
+flashed as validation input, exposed in invitation-list props or written to audit metadata.
+PostgreSQL-only tests cover competing acceptance and role-change/removal on independent connections;
+local SQLite skips are explicit, with execution delegated to PostgreSQL CI.
+
 ## Before accepting live customer data
 
-1. Add invitation token hashing, expiry, one-use acceptance and role escalation tests.
+1. Review invitation flows end to end in a browser; secure delivery, reauthentication for ownership transfer and abuse monitoring remain needed.
 2. Test raw SQL, exports, uploads, queue workers and caches for tenant isolation.
 3. Enforce TLS, secure cookies, least-privileged DB access, MFA for administrators and secret rotation.
 4. Verify recovery from backups into an isolated environment.
 5. Add application quotas, mutation rate limits, monitoring and incident response.
 6. Add CSP and upload validation; do not allow executable tenant configuration.
 7. Define retention/deletion/export procedures, access logs and privacy agreements.
-8. Run PostgreSQL transaction/race tests and an independent security review.
+8. Extend PostgreSQL transaction/race coverage to future workflows and run an independent security review.
 
 App global scopes do not secure direct DB access. Tenant row-level policies are not yet present.
 Audit metadata avoids contact values, but the application still stores customer PII in leads.
 Logs, backups and support access must be protected accordingly.
 No penetration testing or live production deployment has been completed.
+Invitation tokens are secrets even when in URL fragments. Redact request bodies in logs/error reporting;
+do not enable analytics/session replay that records invite links or acceptance input. Never attach tokens
+to audit metadata, customer support tickets or public repository files. Team removal revokes membership,
+not the global user account or their historical business records. Ownership cannot change in this feature.
 
 ## Dependency advisory handled in foundation
 

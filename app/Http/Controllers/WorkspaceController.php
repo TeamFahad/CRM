@@ -48,6 +48,7 @@ class WorkspaceController extends Controller
             'workspace' => $context->tenant(),
             'metrics' => ['leads' => Lead::count(), 'newLeads' => Lead::where('status', 'new')->count(), 'wonLeads' => Lead::where('status', 'won')->count()],
             'canConfigure' => $context->allows('configuration.publish'),
+            'canManageTeam' => $context->allows('team.manage'),
             'modules' => config('platform.modules'),
         ]);
     }

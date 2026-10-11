@@ -30,7 +30,9 @@ No force pushes or destructive resets.
 
 ## Next milestone
 
-Member invitation/acceptance, role assignment with owner safeguards, CRM activity timeline,
-lead detail/edit and customer conversion. Add role escalation, invitation token and tenant isolation tests.
+Team invitation/acceptance and protected-owner role management are implemented; preserve their regression tests.
+Continue with CRM activity timeline, lead detail/edit and customer conversion. Add tenant isolation,
+permission, stale-write, duplicate/conversion idempotency and audit rollback tests.
 Follow with industry package manifest/versioning and typed custom-field schema.
+Ownership transfer and automatic invitation email delivery remain separate future workflows.
 Do not start financial modules before posting invariants and reconciliation tests exist.

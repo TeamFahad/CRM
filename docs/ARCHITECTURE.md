@@ -14,7 +14,7 @@ Database best-practices review influenced these indexes and the short transactio
 
 ## Modules
 
-- Tenancy: workspace, memberships, role registry and fail-closed model trait.
+- Tenancy: workspace, memberships, role registry, owner-managed invitations/team changes and fail-closed model trait.
 - CRM: lead records and authorized transitions between the five basic statuses.
 - Configuration: tenant-specific terminology snapshots and optimistic version check.
 - Audit: append-only application writes of metadata for covered operations. DB credentials can still alter rows; DB immutability controls are a future hardening task.
@@ -33,12 +33,45 @@ Foreign keys prevent orphaning audited tenants. Hard-delete UI is intentionally 
 Self-service account deletion is blocked while memberships or historical business records exist.
 This is a retention safeguard, not a complete account-closure/privacy workflow.
 Leads do not deduplicate yet. Source labels such as WhatsApp do not imply a live integration.
-Member provisioning lacks invitation UI; never add an unauthenticated membership-write endpoint.
+Membership provisioning uses owner-only team management and authenticated, verified recipient acceptance.
+Never add an unauthenticated membership-write endpoint.
+
+## Team and invitation protocol
+
+All team changes lock the tenant row first, then any relevant invitation/member row.
+Short transactions serialize conflicting changes per business and recheck current owner membership
+after acquiring the lock. Role changes/removals also compare the expected role from the UI;
+stale requests cannot silently overwrite newer changes. Owners are never assignable/removable here.
+This design favors predictable safety for small teams; per-tenant lock contention needs load measurement.
+
+Invitations contain normalized email, allowed role, 72-hour expiry and a SHA-256 hash of a random
+256-bit token. Reissue revokes older pending invitations for the recipient inside the same transaction.
+An acceptance requires the original token, matching freshly checked verified email, pending status,
+unexpired deadline and an inviter who is still an owner. Existing memberships are not upgraded by invitations.
+Membership insertion, invitation acceptance and redacted audit event share one transaction.
+Acceptance establishes TenantContext only for that recipient/business audit and clears it in finally.
+
+The link's raw token is a URL fragment, not a server GET URL/query or referrer. It is sent in the
+explicit acceptance POST body and excluded from validation old-input flashing. The React page removes
+the fragment from browser history after reading it into ephemeral component state. Tokens remain secrets:
+HTTP body logging, error-reporting replay and analytics must redact them in any future deployment.
+Owner link delivery uses encrypted short-lived session flash plus native Inertia flash, not page props
+persisted in browser history. Team/join responses use no-store and no-referrer headers.
+Auth/verification redirects may lose the fragment; recipients must reopen the original link after login.
+
+Automatic invitation emails are not sent. Register/verification email transport is a separate auth feature.
+GET does not accept an invitation. Expired/revoked/accepted links render an inactive message for the matching recipient.
+Unknown or mismatched invitations return 404. Mutation routes have throttles in addition to auth, CSRF and permissions.
+
+PostgreSQL tests retain real service locks inside an uncommitted outer transaction and use a second
+connection with a bounded lock timeout. They check blocked double acceptance, one resulting membership/audit,
+and competing role-change/removal with stale retry rejection. This is deterministic lock integration testing,
+not a stress test or proof of every possible concurrent schedule.
 
 ## Production blockers
 
-- PostgreSQL integration/concurrency tests, backup/restore drill and migration rollout/rollback.
-- Invitations, owner-transfer protections, audit viewer, retention and deletion policy.
+- Broader PostgreSQL concurrency/load coverage, backup/restore drill and migration rollout/rollback.
+- Invitation delivery integration, ownership-transfer workflow, audit viewer, retention and deletion policy.
 - Rate limits/quotas beyond workspace creation, abuse controls and observability.
 - Full Bengali localization, timezone-aware UI, accessibility and browser E2E tests.
 - Queue worker tenancy tests and integration idempotency before enabling async jobs.

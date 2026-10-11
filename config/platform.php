@@ -2,7 +2,7 @@
 
 return [
     'roles' => [
-        'owner' => ['leads.view', 'leads.create', 'leads.update', 'configuration.publish', 'audit.view'],
+        'owner' => ['leads.view', 'leads.create', 'leads.update', 'configuration.publish', 'audit.view', 'team.manage'],
         'manager' => ['leads.view', 'leads.create', 'leads.update', 'audit.view'],
         'agent' => ['leads.view', 'leads.create', 'leads.update'],
         'auditor' => ['leads.view', 'audit.view'],

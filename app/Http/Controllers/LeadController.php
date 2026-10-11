@@ -35,6 +35,7 @@ class LeadController extends Controller
             'filters' => $filters, 'terminology' => app(ConfigurationService::class)->current()['terminology'],
             'canCreate' => $context->allows('leads.create'), 'canUpdate' => $context->allows('leads.update'),
             'canConfigure' => $context->allows('configuration.publish'),
+            'canManageTeam' => $context->allows('team.manage'),
         ]);
     }
 

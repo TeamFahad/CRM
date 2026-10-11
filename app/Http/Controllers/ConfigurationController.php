@@ -13,7 +13,7 @@ class ConfigurationController extends Controller
 {
     public function index(ConfigurationService $service): Response
     {
-        return Inertia::render('configuration/index', ['workspace' => app(TenantContext::class)->tenant(), 'configuration' => $service->current()]);
+        return Inertia::render('configuration/index', ['workspace' => app(TenantContext::class)->tenant(), 'configuration' => $service->current(), 'canManageTeam' => app(TenantContext::class)->allows('team.manage')]);
     }
 
     public function store(Request $request, ConfigurationService $service): RedirectResponse
